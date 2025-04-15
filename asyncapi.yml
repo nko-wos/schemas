@@ -1,0 +1,63 @@
+asyncapi: 3.0.0
+info:
+  title: Order API
+  version: 1.0.0
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+defaultContentType: application/json
+servers:
+  scram-connections:
+    host: test.mykafkacluster.org:18092
+    protocol: kafka-secure
+    description: Test broker secured with scramSha256
+    security:
+      - $ref: '#/components/securitySchemes/saslScram'
+    tags:
+      - name: env:test-scram
+        description: >-
+          This environment is meant for running internal tests through
+          scramSha256
+      - name: kind:remote
+        description: This server is a remote server. Not exposed by the application
+      - name: visibility:private
+        description: This resource is private and only available to certain users
+  mtls-connections:
+    host: test.mykafkacluster.org:28092
+    protocol: kafka-secure
+    description: Test broker secured with X509
+    security:
+      - $ref: '#/components/securitySchemes/certs'
+    tags:
+      - name: env:test-mtls
+        description: This environment is meant for running internal tests through mtls
+      - name: kind:remote
+        description: This server is a remote server. Not exposed by the application
+      - name: visibility:private
+        description: This resource is private and only available to certain users
+channels:
+  orders:
+    address: Orders
+    messages:
+      order:
+        $ref: '#/components/messages/order'
+operations:
+  receiveOrders:
+    action: receive
+    channel:
+      $ref: '#/channels/orders'
+components:
+  messages:
+    order:
+      payload:
+        $ref: '#/components/schemas/orderPayload'
+  schemas:
+    orderPayload:
+      $ref: './Order.json'
+  securitySchemes:
+    saslScram:
+      type: scramSha256
+      description: Provide your username and password for SASL/SCRAM authentication
+    certs:
+      type: X509
+      description: Download the certificate files from service provider
