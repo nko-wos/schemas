@@ -1,0 +1,33 @@
+{
+    "type": "record",
+    "name": "Order",
+    "fields": [
+        {
+            "name": "region",
+            "type": "string"
+        },
+        {
+            "name": "item_type",
+            "type": "string"
+        },
+        {
+            "name": "item_id",
+            "type": "string"
+        },
+        {
+            "name": "order_id",
+            "type": "int"
+        },
+        {
+            "name": "units",
+            "type": "int"
+        },
+        {
+            "name": "shipping_address",
+            "type": "string",
+            "confluent:tags": [
+                "PII"
+            ]
+        }
+    ]
+}
